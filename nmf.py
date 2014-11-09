@@ -1,6 +1,7 @@
 __author__ = 'Philipp'
 
 import numpy as np
+import math as m
 
 
 def readTermDocument():
@@ -30,5 +31,19 @@ def readTerms():
     return ret
 
 
-print(readTermDocument().shape)
+def tfIdf(A):
+    sumTerms = [sum(colum) for colum in A.T]  # sum of all terms in a document
+    sumWord = [sum(x >= 1 for x in row) for row in A]
+    numDoc = len(A)
+    for i in range(len(A)):
+        for j in range(len(A[i])):
+            A[i, j] = (A[i, j] / sumTerms[j]) * m.log(numDoc / sumWord[i])
+    return A
+
+
+A = readTermDocument()
+print(A.shape)
 print(len(readTerms()))
+print(A.max())
+A = tfIdf(A)
+print(A.max())
