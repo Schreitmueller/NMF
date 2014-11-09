@@ -56,7 +56,8 @@ def test_tfidf():
 
 
 def initWH(a, k):
-    return np.random.random_sample((a.shape[0], k)), np.random.random_sample((k, a.shape[1]))
+    # return np.random.random_sample((a.shape[0], k)), np.random.random_sample((k, a.shape[1]))
+    return np.ones((a.shape[0], k)), np.ones((k, a.shape[1]))
 
 
 def iterstep(a, w, h):
@@ -79,26 +80,22 @@ def computedistance(a, w, h):
 
 
 def run():
-    a = gettesta()  # tfidf(readtermdocument())
+    a = tfidf(gettesta()) # tfidf(readtermdocument())
     k = 2
     terms = readterms()
     print("Term-Document Matrix tf-idf normalised loaded...")
     w, h = initWH(a, k)
     e = computedistance(a, w, h)
-    while e > 10:
+    i = 0
+    while e > 0.01:
+        if i > 100:
+            print("Max iterations reached!")
+            break
         print("Error:" + str(e))
         w, h = iterstep(a, w, h)
         e = computedistance(a, w, h)
+        i += 1
     print("Computation finished!")
 
 
 run()
-'''print(A.shape)
-print(len(readterms()))
-print(A.max())
-# A = tfidf(A)
-# print(A.max())
-wh = initWH(A, 2)
-print(wh[0].shape)
-print(wh[1].shape)
-'''
