@@ -1,10 +1,11 @@
 __author__ = 'Philipp'
 
-import numpy as np
 import math as m
 
+import numpy as np
 
-def readTermDocument():
+
+def readtermdocument():
     f = open("data/bbcnews.mtx")
     counter = 0
     for line in f.readlines():
@@ -22,7 +23,7 @@ def readTermDocument():
     return ret
 
 
-def readTerms():
+def readterms():
     f = open("data/bbcnews.terms")
     ret = []
     for line in f.readlines():
@@ -31,7 +32,7 @@ def readTerms():
     return ret
 
 
-def tfIdf(A):
+def tfidf(A):
     sumTerms = [sum(colum) for colum in A.T]  # sum of all terms in a document
     sumWord = [sum(x >= 1 for x in row) for row in A]
     numDoc = len(A)
@@ -41,9 +42,22 @@ def tfIdf(A):
     return A
 
 
-A = readTermDocument()
+def test_tfidf():
+    testMatrix = np.array(((3.0, 4.0, 0), (17.0, 0.0, 1.0), (0.0, 2.0, 3.0)))
+    print(testMatrix)
+    print(tfidf(testMatrix))
+
+
+def initWH(A, k):
+    return np.random.random_sample((A.shape[0], k)), np.random.random_sample((k, A.shape[1]))
+
+
+A = readtermdocument()
 print(A.shape)
-print(len(readTerms()))
+print(len(readterms()))
 print(A.max())
-A = tfIdf(A)
-print(A.max())
+# A = tfidf(A)
+#print(A.max())
+wh = initWH(A, 2)
+print(wh[0].shape)
+print(wh[1].shape)
