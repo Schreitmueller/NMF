@@ -48,11 +48,11 @@ def tfidf(a):
 
 def test_tfidf():
     testmatrix = gettesta()
-    #print(testmatrix)
-    #print(tfidf(testmatrix))
+    # print(testmatrix)
+    # print(tfidf(testmatrix))
     print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
     print(computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
-                    np.array(((4, 4, 4), (4, 4, 4)))))
+                          np.array(((4, 4, 4), (4, 4, 4)))))
 
 
 def initWH(a, k):
@@ -76,8 +76,23 @@ def computedistance(a, w, h):
     temp = a - temp
     temp *= temp
     return np.sum(temp)
-test_tfidf()
-A = gettesta()
+
+
+def run():
+    a = gettesta()  # tfidf(readtermdocument())
+    k = 2
+    terms = readterms()
+    print("Term-Document Matrix tf-idf normalised loaded...")
+    w, h = initWH(a, k)
+    e = computedistance(a, w, h)
+    while e > 10:
+        print("Error:" + str(e))
+        w, h = iterstep(a, w, h)
+        e = computedistance(a, w, h)
+    print("Computation finished!")
+
+
+run()
 '''print(A.shape)
 print(len(readterms()))
 print(A.max())
