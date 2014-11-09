@@ -3,7 +3,7 @@ __author__ = 'Philipp'
 import numpy as np
 
 
-def readData():
+def readTermDocument():
     f = open("data/bbcnews.mtx")
     counter = 0
     for line in f.readlines():
@@ -15,10 +15,20 @@ def readData():
                 vals = line.replace("\n", "").split(' ', 2)
                 x, y = map(int, vals[:2])
                 z = float(vals[2])
-                ret[x-1, y-1] = z
+                ret[x - 1, y - 1] = z
         counter += 1
     f.close()
     return ret
 
 
-print(readData().shape)
+def readTerms():
+    f = open("data/bbcnews.terms")
+    ret = []
+    for line in f.readlines():
+        ret.append(line.replace("\n", ""))
+    f.close()
+    return ret
+
+
+print(readTermDocument().shape)
+print(len(readTerms()))
