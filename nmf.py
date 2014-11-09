@@ -66,8 +66,9 @@ def iterstep(a, w, h):
     wa = np.array(np.mat(w.T) * a)
     h_new = h * (wa / wwh)
 
-    ah = np.dot(a, h.T)
-    whh = np.array(wh * np.mat(h.T))
+    ah = np.dot(a, h_new.T)
+    wh = wh = np.dot(w, h_new)
+    whh = np.array(wh * np.mat(h_new.T))
     w_new = w * (ah / whh)
     return w_new, h_new
 
@@ -79,23 +80,30 @@ def computedistance(a, w, h):
     return np.sum(temp)
 
 
+def getmaxindices(w):
+    return w.T.argmax(axis=1)
+
+
 def run():
-    a = tfidf(gettesta()) # tfidf(readtermdocument())
-    k = 2
+    a = tfidf(readtermdocument())
+    k = 6
     terms = readterms()
     print("Term-Document Matrix tf-idf normalised loaded...")
     w, h = initWH(a, k)
     e = computedistance(a, w, h)
+
     i = 0
     while e > 0.01:
         if i > 100:
-            print("Max iterations reached!")
+            print("Max iterations reached! Error:" + str(e))
             break
-        print("Error:" + str(e))
         w, h = iterstep(a, w, h)
         e = computedistance(a, w, h)
         i += 1
     print("Computation finished!")
+    termlist = getmaxindices(w)
+    for i in range(len(termlist)):
+        print("Cluster " + str(i) + " main term: " + terms[termlist[i]])
 
 
 run()
