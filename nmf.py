@@ -23,6 +23,10 @@ def readtermdocument():
     return ret
 
 
+def gettesta():
+    return np.array(((3.0, 4.0, 0), (17.0, 0.0, 1.0), (0.0, 2.0, 3.0)))
+
+
 def readterms():
     f = open("data/bbcnews.terms")
     ret = []
@@ -32,32 +36,42 @@ def readterms():
     return ret
 
 
-def tfidf(A):
-    sumTerms = [sum(colum) for colum in A.T]  # sum of all terms in a document
-    sumWord = [sum(x >= 1 for x in row) for row in A]
-    numDoc = len(A)
-    for i in range(len(A)):
-        for j in range(len(A[i])):
-            A[i, j] = (A[i, j] / sumTerms[j]) * m.log(numDoc / sumWord[i])
-    return A
+def tfidf(a):
+    sumTerms = [sum(colum) for colum in a.T]  # sum of all terms in a document
+    sumWord = [sum(x >= 1 for x in row) for row in a]
+    numDoc = len(a)
+    for i in range(len(a)):
+        for j in range(len(a[i])):
+            a[i, j] = (a[i, j] / sumTerms[j]) * m.log(numDoc / sumWord[i])
+    return a
 
 
 def test_tfidf():
-    testMatrix = np.array(((3.0, 4.0, 0), (17.0, 0.0, 1.0), (0.0, 2.0, 3.0)))
-    print(testMatrix)
-    print(tfidf(testMatrix))
+    testmatrix = gettesta()
+    print(testmatrix)
+    print(tfidf(testmatrix))
 
 
-def initWH(A, k):
-    return np.random.random_sample((A.shape[0], k)), np.random.random_sample((k, A.shape[1]))
+def initWH(a, k):
+    return np.random.random_sample((a.shape[0], k)), np.random.random_sample((k, a.shape[1]))
 
 
-A = readtermdocument()
-print(A.shape)
+def iterstep(a, w, h):
+    wh = np.dot(w, h)
+    wwh = np.array(np.mat(w.T) * wh)
+    wa = np.array(np.mat(w.T) * a)
+    h = h * (wa / wwh)
+    return h
+
+
+print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
+A = gettesta()
+'''print(A.shape)
 print(len(readterms()))
 print(A.max())
 # A = tfidf(A)
-#print(A.max())
+# print(A.max())
 wh = initWH(A, 2)
 print(wh[0].shape)
 print(wh[1].shape)
+'''
