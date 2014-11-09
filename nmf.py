@@ -48,8 +48,11 @@ def tfidf(a):
 
 def test_tfidf():
     testmatrix = gettesta()
-    print(testmatrix)
-    print(tfidf(testmatrix))
+    #print(testmatrix)
+    #print(tfidf(testmatrix))
+    print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
+    print(computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
+                    np.array(((4, 4, 4), (4, 4, 4)))))
 
 
 def initWH(a, k):
@@ -60,11 +63,20 @@ def iterstep(a, w, h):
     wh = np.dot(w, h)
     wwh = np.array(np.mat(w.T) * wh)
     wa = np.array(np.mat(w.T) * a)
-    h = h * (wa / wwh)
-    return h
+    h_new = h * (wa / wwh)
+
+    ah = np.dot(a, h.T)
+    whh = np.array(wh * np.mat(h.T))
+    w_new = w * (ah / whh)
+    return w_new, h_new
 
 
-print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
+def computedistance(a, w, h):
+    temp = np.array(np.dot(w, h))
+    temp = a - temp
+    temp *= temp
+    return np.sum(temp)
+test_tfidf()
 A = gettesta()
 '''print(A.shape)
 print(len(readterms()))
