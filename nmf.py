@@ -46,13 +46,18 @@ def tfidf(a):
     return a
 
 
-def test_tfidf():
+def tests():
     testmatrix = gettesta()
     # print(testmatrix)
     # print(tfidf(testmatrix))
     print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
     print(computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
                           np.array(((4, 4, 4), (4, 4, 4)))))
+    a = np.array(((2, 1, 5), (4, 6, 2), (6, 5, 4)))
+    b = []
+    for colum in a.T:
+        b.append(colum.argsort()[-3:][::-1])
+    print(b)
 
 
 def initWH(a, k):
@@ -81,29 +86,37 @@ def computedistance(a, w, h):
 
 
 def getmaxindices(w):
-    return w.T.argmax(axis=1)
+    ret=[]
+    for column in w.T:
+        ret.append(column.argsort()[-3:][::-1])
+    return ret
 
 
 def run():
     a = tfidf(readtermdocument())
-    k = 6
+    k = 3
     terms = readterms()
     print("Term-Document Matrix tf-idf normalised loaded...")
     w, h = initWH(a, k)
     e = computedistance(a, w, h)
-
+    delta_e = e
+    new_e = e
     i = 0
-    while e > 0.01:
-        if i > 100:
-            print("Max iterations reached! Error:" + str(e))
+    while delta_e > 0.0000000001 or i < 50:
+        if i > 1000:
+            print("Max iterations reached!")
             break
         w, h = iterstep(a, w, h)
-        e = computedistance(a, w, h)
+        new_e = computedistance(a, w, h)
+        delta_e = abs(e - new_e)
+        e = new_e
         i += 1
-    print("Computation finished!")
-    termlist = getmaxindices(w)
-    for i in range(len(termlist)):
-        print("Cluster " + str(i) + " main term: " + terms[termlist[i]])
+    print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(e))
+    for i in getmaxindices(w):
+        print("Cluster " + str(i))
+        for j in i:
+            print("\tTerm: "+terms[j])
+
 
 
 run()
