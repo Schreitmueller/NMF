@@ -110,4 +110,4 @@ def run(min_delta, max_iter, k):
             print("\tTerm: " + terms[j])
 
 
-run(0.0000000001, 3000, 3)
+run(0.0000000001, 3000, 4)
