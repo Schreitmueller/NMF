@@ -46,10 +46,10 @@ def tfidf(a):
     return a
 
 
-def tests():
+def tests():  # TODO in own file
     testmatrix = gettesta()
-    # print(testmatrix)
-    # print(tfidf(testmatrix))
+    print(testmatrix)
+    print(tfidf(testmatrix))
     print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
     print(computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
                           np.array(((4, 4, 4), (4, 4, 4)))))
@@ -86,7 +86,7 @@ def computedistance(a, w, h):
 
 
 def getmaxindices(w):
-    ret=[]
+    ret = []
     for column in w.T:
         ret.append(column.argsort()[-3:][::-1])
     return ret
@@ -102,7 +102,7 @@ def run():
     delta_e = e
     new_e = e
     i = 0
-    while delta_e > 0.0000000001 or i < 50:
+    while delta_e > 0.0000000001 or i < 50:  # at least 50 iterations, then wait until change in error gets very small
         if i > 1000:
             print("Max iterations reached!")
             break
@@ -115,8 +115,7 @@ def run():
     for i in getmaxindices(w):
         print("Cluster " + str(i))
         for j in i:
-            print("\tTerm: "+terms[j])
-
+            print("\tTerm: " + terms[j])
 
 
 run()
