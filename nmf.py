@@ -4,6 +4,8 @@ import math as m
 
 import numpy as np
 
+np.random.seed(1)
+
 
 def read_term_document():
     f = open("data/bbcnews.mtx")
@@ -43,7 +45,9 @@ def tf_idf(a):
 
 
 def init_wh(a, k):
-    return np.ones((a.shape[0], k)), np.ones((k, a.shape[1]))
+    w = np.random.random(a.shape[0] * k).reshape(a.shape[0], k) * np.average(a)
+    h = np.random.random(k * a.shape[1]).reshape(k, a.shape[1]) * np.average(a)
+    return w, h
 
 
 def iter_step(a, w, h):
@@ -96,7 +100,7 @@ def run(min_delta, max_iter, k):
             print("[" + str(i) + "] New Best e: " + str(smallest_e))
             best_w = w
         delta_e = e - new_e
-        print("[" + str(i) + "] Delta-e: " + str(delta_e))
+        # print("[" + str(i) + "] Delta-e: " + str(delta_e))
         e = new_e
         i += 1
     print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(smallest_e))
