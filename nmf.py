@@ -74,6 +74,7 @@ def get_max_indices(w):
 
 
 def run(min_delta, max_iter, k):
+    print("Clustering into " + str(k) + " Clusters. Find smallest error within " + str(max_iter) + " Iterations.")
     a = tf_idf(read_term_document())
     terms = read_terms()
     print("Term-Document Matrix tf-idf normalised loaded...")
@@ -98,11 +99,11 @@ def run(min_delta, max_iter, k):
         print("[" + str(i) + "] Delta-e: " + str(delta_e))
         e = new_e
         i += 1
-    print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(e))
+    print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(smallest_e))
     for i in get_max_indices(best_w):
         print("Cluster " + str(i))
         for j in i:
             print("\tTerm: " + terms[j])
 
 
-run(0.0000000001, 1000, 6)
+run(0.0000000001, 3000, 3)
