@@ -32,7 +32,7 @@ def read_terms():
     return ret
 
 
-def tfidf(a):
+def tf_idf(a):
     sumTerms = [sum(colum) for colum in a.T]  # sum of all terms in a document
     sumWord = [sum(x >= 1 for x in row) for row in a]
     numDoc = len(a)
@@ -42,13 +42,12 @@ def tfidf(a):
     return a
 
 
-
-def initWH(a, k):
+def init_wh(a, k):
     # return np.random.random_sample((a.shape[0], k)), np.random.random_sample((k, a.shape[1]))
     return np.ones((a.shape[0], k)), np.ones((k, a.shape[1]))
 
 
-def iterstep(a, w, h):
+def iter_step(a, w, h):
     wh = np.dot(w, h)
     wwh = np.array(np.mat(w.T) * wh)
     wa = np.array(np.mat(w.T) * a)
@@ -61,44 +60,43 @@ def iterstep(a, w, h):
     return w_new, h_new
 
 
-def computedistance(a, w, h):
+def compute_distance(a, w, h):
     temp = np.array(np.dot(w, h))
     temp = a - temp
     temp *= temp
     return np.sum(temp)
 
 
-def getmaxindices(w):
+def get_max_indices(w):
     ret = []
     for column in w.T:
         ret.append(column.argsort()[-3:][::-1])
     return ret
 
 
-def run():
-    a = tfidf(read_term_document())
-    k = 3
+def run(min_delta, min_iter, k):
+    a = tf_idf(read_term_document())
     terms = read_terms()
     print("Term-Document Matrix tf-idf normalised loaded...")
-    w, h = initWH(a, k)
-    e = computedistance(a, w, h)
+    w, h = init_wh(a, k)
+    e = compute_distance(a, w, h)
     delta_e = e
     new_e = e
     i = 0
-    while delta_e > 0.0000000001 or i < 50:  # at least 50 iterations, then wait until change in error gets very small
+    while delta_e > min_delta or i < min_iter:  # at least 50 iterations, then wait until change in error gets very small
         if i > 1000:
             print("Max iterations reached!")
             break
-        w, h = iterstep(a, w, h)
-        new_e = computedistance(a, w, h)
+        w, h = iter_step(a, w, h)
+        new_e = compute_distance(a, w, h)
         delta_e = abs(e - new_e)
         e = new_e
         i += 1
     print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(e))
-    for i in getmaxindices(w):
+    for i in get_max_indices(w):
         print("Cluster " + str(i))
         for j in i:
             print("\tTerm: " + terms[j])
 
 
-#run()
+run(0.0000000001, 2000, 4)

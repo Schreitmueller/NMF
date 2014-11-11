@@ -18,10 +18,10 @@ def tests():
     """
     testmatrix = get_test_a()
     print(testmatrix)
-    print(nmf.tfidf(testmatrix))
-    print(nmf.iterstep(get_test_a(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
-    print(nmf.computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
-                          np.array(((4, 4, 4), (4, 4, 4)))))
+    print(nmf.tf_idf(testmatrix))
+    print(nmf.iter_step(get_test_a(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
+    print(nmf.compute_distance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
+                               np.array(((4, 4, 4), (4, 4, 4)))))
     a = np.array(((2, 1, 5), (4, 6, 2), (6, 5, 4)))
     b = []
     for colum in a.T:
