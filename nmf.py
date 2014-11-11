@@ -1,11 +1,11 @@
-__author__ = 'Philipp'
+__author__ = 'Philipp Schreitmueller'
 
 import math as m
 
 import numpy as np
 
 
-def readtermdocument():
+def read_term_document():
     f = open("data/bbcnews.mtx")
     counter = 0
     for line in f.readlines():
@@ -23,11 +23,7 @@ def readtermdocument():
     return ret
 
 
-def gettesta():
-    return np.array(((3.0, 4.0, 0), (17.0, 0.0, 1.0), (0.0, 2.0, 3.0)))
-
-
-def readterms():
+def read_terms():
     f = open("data/bbcnews.terms")
     ret = []
     for line in f.readlines():
@@ -45,19 +41,6 @@ def tfidf(a):
             a[i, j] = (a[i, j] / sumTerms[j]) * m.log(numDoc / sumWord[i])
     return a
 
-
-def tests():  # TODO in own file
-    testmatrix = gettesta()
-    print(testmatrix)
-    print(tfidf(testmatrix))
-    print(iterstep(gettesta(), np.array(((1, 1), (1, 1), (1, 1))), np.array(((2, 2, 2), (2, 2, 2)))))
-    print(computedistance(np.array(((5, 5, 5), (5, 5, 5), (5, 5, 5))), np.array(((1, 1), (1, 1), (1, 1))),
-                          np.array(((4, 4, 4), (4, 4, 4)))))
-    a = np.array(((2, 1, 5), (4, 6, 2), (6, 5, 4)))
-    b = []
-    for colum in a.T:
-        b.append(colum.argsort()[-3:][::-1])
-    print(b)
 
 
 def initWH(a, k):
@@ -93,9 +76,9 @@ def getmaxindices(w):
 
 
 def run():
-    a = tfidf(readtermdocument())
+    a = tfidf(read_term_document())
     k = 3
-    terms = readterms()
+    terms = read_terms()
     print("Term-Document Matrix tf-idf normalised loaded...")
     w, h = initWH(a, k)
     e = computedistance(a, w, h)
@@ -118,4 +101,4 @@ def run():
             print("\tTerm: " + terms[j])
 
 
-run()
+#run()
