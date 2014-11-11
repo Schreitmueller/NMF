@@ -43,7 +43,6 @@ def tf_idf(a):
 
 
 def init_wh(a, k):
-    # return np.random.random_sample((a.shape[0], k)), np.random.random_sample((k, a.shape[1]))
     return np.ones((a.shape[0], k)), np.ones((k, a.shape[1]))
 
 
@@ -74,7 +73,7 @@ def get_max_indices(w):
     return ret
 
 
-def run(min_delta, min_iter, k):
+def run(min_delta, max_iter, k):
     a = tf_idf(read_term_document())
     terms = read_terms()
     print("Term-Document Matrix tf-idf normalised loaded...")
@@ -82,21 +81,28 @@ def run(min_delta, min_iter, k):
     e = compute_distance(a, w, h)
     delta_e = e
     new_e = e
+    smallest_e = e
+    best_w = w
     i = 0
-    while delta_e > min_delta or i < min_iter:  # at least 50 iterations, then wait until change in error gets very small
-        if i > 1000:
+    while i < max_iter:  # at least 50 iterations, then wait until change in error gets very small
+        if i > 3000:
             print("Max iterations reached!")
             break
         w, h = iter_step(a, w, h)
         new_e = compute_distance(a, w, h)
-        delta_e = abs(e - new_e)
+        if new_e < smallest_e:
+            smallest_e = new_e
+            print("[" + str(i) + "] New Best e: " + str(smallest_e))
+            best_w = w
+        delta_e = e - new_e
+        print("[" + str(i) + "] Delta-e: " + str(delta_e))
         e = new_e
         i += 1
     print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(e))
-    for i in get_max_indices(w):
+    for i in get_max_indices(best_w):
         print("Cluster " + str(i))
         for j in i:
             print("\tTerm: " + terms[j])
 
 
-run(0.0000000001, 2000, 4)
+run(0.0000000001, 1000, 6)
