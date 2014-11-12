@@ -116,21 +116,17 @@ def get_max_indices(w, terms):
     return ret
 
 
-def run(min_delta, max_iter, k, num_terms):
+def nmf(a, min_delta, max_iter, k, num_terms):
     """
     The main function: performs NMF clustering with euclidian distance as cost function
     with two abort criteria
+    :param a: normalised term-document array
     :param min_delta: Stop loop if change in error is smaller than this value
     :param max_iter: Stop loop after this number of loop executions
     :param k: Number of cluster
     :param num_terms: Number of terms to be listed per clusters
-    :return:
+    :return: List of lists with indices with most important terms, iterations performed
     """
-    print("Clustering into " + str(k) + " Clusters. Find smallest error within " + str(max_iter) + " Iterations or")
-    print("abort when change in error is smaller than " + str(min_delta))
-    a = tf_idf(read_term_document())
-    terms = read_terms()
-    print("Term-Document Matrix tf-idf normalised loaded...")
     w, h = init_wh(a, k)
     best_w = w
     e = delta_e = new_e = smallest_e = compute_distance(a, w, h)
@@ -140,20 +136,31 @@ def run(min_delta, max_iter, k, num_terms):
         new_e = compute_distance(a, w, h)
         if new_e < smallest_e:
             smallest_e = new_e
-            #print("[" + str(i) + "] New Best e: " + str(smallest_e)) # DEBUG
             best_w = w
         delta_e = e - new_e
         e = new_e
         i += 1
-    print("Computation finished (Iterations=" + str(i) + ")! Error: " + str(smallest_e))
-    for i in get_max_indices(best_w, num_terms):
-        print("Cluster " + str(i))
-        for j in i:
-            print("\tTerm: " + terms[j])
+    return get_max_indices(best_w, num_terms), i
 
 
-abort_error = 1e-6
-max_iter = 500
-num_terms = 3
-for c in range(2, 6):
-    run(abort_error, max_iter, c, num_terms)
+def run():
+    """
+    Main program
+    :return: null
+    """
+    a = tf_idf(read_term_document())
+    terms = read_terms()
+    abort_error = 1e-6
+    max_iter = 500
+    num_terms = 3
+    for c in range(2, 7):
+        print("Clustering into " + str(c) + " Clusters. Find smallest error within " + str(max_iter) + " Iterations or")
+        print("abort when change in error is smaller than " + str(abort_error))
+        term_indices, iterations = nmf(a, abort_error, max_iter, c, num_terms)
+        print("Finished after " + str(iterations) + " Iterations!")
+        for i in term_indices:
+            print("Cluster " + str(i))
+            for j in i:
+                print("\tTerm: " + terms[j])
+
+run()
