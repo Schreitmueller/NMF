@@ -31,7 +31,7 @@ def read_term_document():
 
 def read_terms():
     """
-    Reads the bbcnes.terms file in a list
+    Reads the bbcnews.terms file in a list
     :return: List with all available terms
     """
     f = open("data/bbcnews.terms")
@@ -64,8 +64,9 @@ def init_wh(a, k):
     :param k: number of clusters
     :return: tuple of arrays w and h
     """
-    w = np.random.random(a.shape[0] * k).reshape(a.shape[0], k) * np.average(a)
-    h = np.random.random(k * a.shape[1]).reshape(k, a.shape[1]) * np.average(a)
+    a_avg = np.average(a)
+    w = np.random.random(a.shape[0] * k).reshape(a.shape[0], k) * a_avg
+    h = np.random.random(k * a.shape[1]).reshape(k, a.shape[1]) * a_avg
     return w, h
 
 
@@ -77,15 +78,8 @@ def iter_step(a, w, h):
     :param h: array h
     :return: tuple of new w and h
     """
-    wh = np.dot(w, h)
-    wwh = np.array(np.mat(w.T) * wh)
-    wa = np.array(np.mat(w.T) * a)
-    h_new = h * (wa / wwh)
-
-    ah = np.dot(a, h_new.T)
-    wh = wh = np.dot(w, h_new)
-    whh = np.array(wh * np.mat(h_new.T))
-    w_new = w * (ah / whh)
+    h_new = h * (np.array(np.mat(w.T) * a) / np.array(np.mat(w.T) * np.dot(w, h)))
+    w_new = w * (np.dot(a, h_new.T) / np.array(np.dot(w, h_new) * np.mat(h_new.T)))
     return w_new, h_new
 
 
@@ -97,8 +91,7 @@ def compute_distance(a, w, h):
     :param h: array
     :return: distance value
     """
-    temp = np.array(np.dot(w, h))
-    temp = a - temp
+    temp = a - np.array(np.dot(w, h))
     temp *= temp
     return np.sum(temp)
 
@@ -162,5 +155,6 @@ def run():
             print("Cluster " + str(i))
             for j in i:
                 print("\tTerm: " + terms[j])
+
 
 run()
