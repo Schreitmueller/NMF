@@ -140,7 +140,7 @@ def nmf(a, min_delta, max_iter, k, num_terms):
         delta_e = e - new_e
         e = new_e
         i += 1
-    return get_max_indices(best_w, num_terms), i
+    return get_max_indices(best_w, num_terms), i, best_w
 
 
 def run():
@@ -156,7 +156,7 @@ def run():
     for c in range(2, 7):
         print("Clustering into " + str(c) + " Clusters. Find smallest error within " + str(max_iter) + " Iterations or")
         print("abort when change in error is smaller than " + str(abort_error))
-        term_indices, iterations = nmf(a, abort_error, max_iter, c, num_terms)
+        term_indices, iterations, best_w = nmf(a, abort_error, max_iter, c, num_terms)
         print("Finished after " + str(iterations) + " Iterations!")
         for i in term_indices:
             print("Cluster " + str(i))
