@@ -124,6 +124,7 @@ def nmf(a, min_delta, max_iter, k, num_terms):
     best_w = w
     e = delta_e = new_e = smallest_e = compute_distance(a, w, h)
     i = 0
+    error_list =[]
     while i < max_iter and delta_e > min_delta:
         w, h = iter_step(a, w, h)
         new_e = compute_distance(a, w, h)
@@ -132,8 +133,9 @@ def nmf(a, min_delta, max_iter, k, num_terms):
             best_w = w
         delta_e = e - new_e
         e = new_e
+        error_list.append(e)
         i += 1
-    return get_max_indices(best_w, num_terms), i, best_w
+    return get_max_indices(best_w, num_terms), i, best_w,error_list
 
 
 def run():
@@ -143,8 +145,8 @@ def run():
     """
     a = tf_idf(read_term_document())
     terms = read_terms()
-    abort_error = 1e-6
-    max_iter = 500
+    abort_error = 0
+    max_iter = 2000
     num_terms = 3
     for c in range(2, 7):
         print("Clustering into " + str(c) + " Clusters. Find smallest error within " + str(max_iter) + " Iterations or")
@@ -157,4 +159,4 @@ def run():
                 print("\tTerm: " + terms[j])
 
 
-run()
+#run()
