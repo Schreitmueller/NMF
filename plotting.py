@@ -16,20 +16,25 @@ def plot_run(plotter):
         term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, c, num_terms)
         errors.append(e)
 
-    plotter(errors, best_w)
+    plotter(errors)
 
 
 def plot_error(errors):
     fig = plt.figure()
     fig.suptitle('Euclidian Distance', fontsize=14, fontweight='bold')
     ax = fig.add_subplot(111)
-    fig.subplots_adjust(top=0.85)
-    ax.set_title('axes title')
-
-    ax.set_xlabel('xlabel')
-    ax.set_ylabel('ylabel')
-
+    ax.set_xlabel('Iterations')
+    ax.set_ylabel('Cost function')
+    i = 2
+    hndls = []
+    for e in errors:
+        hndls.append(ax.plot(e, label=str(i) + ' Cluster')[0])
+        i += 1
+    plt.legend(handles=hndls)
     plt.show()
+
+
+
 # T = range(best_w.shape[0])
 
 # for i in range(best_w.shape[1]):
