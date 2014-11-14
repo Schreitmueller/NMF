@@ -12,7 +12,7 @@ def plot_run(plotter):
     max_iter = 500
     num_terms = 3
     errors = []
-    for c in range(2, 4):
+    for c in range(2, 7):
         term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, c, num_terms)
         errors.append(e)
 
