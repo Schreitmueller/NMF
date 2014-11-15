@@ -12,11 +12,11 @@ def plot_run(plotter):
     max_iter = 500
     num_terms = 3
     errors = []
-    for c in range(2, 7):
-        term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, c, num_terms)
-        errors.append(e)
+    #for c in range(2, 7):
+    term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, 6, num_terms)
+    #    errors.append(e)
 
-    plotter(errors)
+    plotter(best_w)
 
 
 def plot_error(errors):
@@ -34,11 +34,16 @@ def plot_error(errors):
     plt.show()
 
 
+def plot_w(best_w):
+    fig = plt.figure()
+    fig.suptitle('Basis Matrix W', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(111)
+    ax.set_xlabel('Terms')
+    ax.set_ylabel('Weight')
+    T = range(best_w.shape[0])
+    for i in range(best_w.shape[1]):
+        plt.plot(T, best_w[:, i])
+    plt.show()
 
-# T = range(best_w.shape[0])
-
-# for i in range(best_w.shape[1]):
-# plt.plot(T, best_w[:, i])
-
-plot_run(plot_error)
+plot_run(plot_w)
 
