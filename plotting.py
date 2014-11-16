@@ -8,15 +8,15 @@ import nmf as nmf
 def plot_run(plotter):
     a = nmf.tf_idf(nmf.read_term_document())
     terms = nmf.read_terms()
-    abort_error = 1e-7
+    abort_error = -500
     max_iter = 500
     num_terms = 3
     errors = []
-    #for c in range(2, 7):
-    term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, 6, num_terms)
-    #    errors.append(e)
+    for c in range(2, 7):
+        term_indices, iterations, best_w, e = nmf.nmf(a, abort_error, max_iter, c, num_terms)
+        errors.append(e)
 
-    plotter(best_w)
+    plotter(errors)
 
 
 def plot_error(errors):
@@ -45,5 +45,5 @@ def plot_w(best_w):
         plt.plot(T, best_w[:, i])
     plt.show()
 
-plot_run(plot_w)
+plot_run(plot_error)
 
